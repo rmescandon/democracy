@@ -67,7 +67,7 @@ contract Democracy is Ownable {
                 break;
             }
         }
-        require(found, "Address is not of a valid citizen");
+        require(found, "Citizen is not registered");
         _;
     }
 
@@ -79,11 +79,11 @@ contract Democracy is Ownable {
                 break;
             }
         }
-        require(found, "Address is not of a valid delegate");
+        require(found, "Delegate is not registered");
         _;
     }
 
-    modifier hasNotVoted(uint256 _proposalId) {
+    modifier citizenHasNotVoted(uint256 _proposalId) {
         require(!citizenHasVoted(msg.sender, _proposalId), "Citizen already voted");
         _;
     }
@@ -96,6 +96,16 @@ contract Democracy is Ownable {
             }
         }
         return false;
+    }
+
+    modifier delegateHasNotVoted(uint256 _proposalId) {
+        require(!delegateHasVoted(msg.sender, _proposalId), "Delegate already voted");
+        _;
+    }
+
+    function delegateHasVoted(address _delegate, uint256 _proposalId) public view returns (bool) {
+        DelegateVote memory dv = getDelegateVote(_proposalId, _delegate);
+        return dv.voted;
     }
 
     modifier citizenNotRegistered(address _citizen) {
@@ -160,7 +170,7 @@ contract Democracy is Ownable {
         emit DelegateRegistered(_delegate, _percentage);
     }
 
-    function voteAsDelegate(uint256 _proposalId, Choice _choice) external isDelegate {
+    function voteAsDelegate(uint256 _proposalId, Choice _choice) external isDelegate delegateHasNotVoted(_proposalId) {
         DelegateVote storage vote = _pointToDelegateVote(_proposalId, msg.sender);
         require(vote.voted == false, "The delegate already voted");
         vote.voted = true;
@@ -169,7 +179,7 @@ contract Democracy is Ownable {
         emit DelegateVoted(msg.sender, _proposalId, _choice);
     }
 
-    function voteAsCitizen(uint256 _proposalId, Choice _choice) external isCitizen hasNotVoted(_proposalId) {
+    function voteAsCitizen(uint256 _proposalId, Choice _choice) external isCitizen citizenHasNotVoted(_proposalId) {
         Proposal storage proposal = proposals[_proposalId];
 
         // register vote
@@ -187,7 +197,7 @@ contract Democracy is Ownable {
     function delegateVote(
         uint256 _proposalId,
         address _delegate
-    ) external isCitizen delegateRegistered(_delegate) hasNotVoted(_proposalId) {
+    ) external isCitizen delegateRegistered(_delegate) citizenHasNotVoted(_proposalId) {
         DelegateVote storage dv = _pointToDelegateVote(_proposalId, _delegate);
         dv.weight += 1;
         proposals[_proposalId].voters.push(msg.sender);

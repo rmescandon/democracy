@@ -33,7 +33,7 @@ describe("Proposal creation", () => {
   });
 });
 
-describe("Register voters", () => {
+describe("Register citizens", () => {
   it("Should register a citizen as a potential voter", async () => {
     const { democracy, addr1 } = await loadFixture(deployContract);
     await expect(democracy.registerCitizen(addr1.address))
@@ -84,10 +84,10 @@ describe("Register delegates", () => {
 });
 
 describe("Voting process", () => {
-  it("A citizen votes", async () => {
+  it("Should allow a citizen to vote", async () => {
     const { democracy, addr1 } = await loadFixture(deployContract);
-    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
     await democracy.registerCitizen(addr1.address);
+    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
     await expect(democracy.connect(addr1).voteAsCitizen(0, 1))
       .to.emit(democracy, "CitizenVoted")
       .withArgs(addr1.address, 0, 1);
@@ -95,7 +95,33 @@ describe("Voting process", () => {
     await expect(democracy.citizenHasVoted(addr1.address, 0)).to.eventually.be.true;
   });
 
-  it("A citizen delegates their vote", async () => {
+  it("Should not allow a citizen to vote twice", async () => {
+    const { democracy, addr1 } = await loadFixture(deployContract);
+    await democracy.registerCitizen(addr1.address);
+    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await democracy.connect(addr1).voteAsCitizen(0, 1);
+    await expect(democracy.connect(addr1).voteAsCitizen(0, 1)).to.be.revertedWith("Citizen already voted");
+  });
+
+  it("Should not allow a citizen delegate after voting", async () => {
+    const { democracy, addr1, addr2 } = await loadFixture(deployContract);
+    await democracy.registerCitizen(addr1.address);
+    await democracy.registerDelegate(addr2.address, 50);
+    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await democracy.connect(addr1).voteAsCitizen(0, 1);
+    await expect(democracy.connect(addr1).delegateVote(0, addr2.address)).to.be.revertedWith("Citizen already voted");
+  });
+
+  it("Should not allow a citizen delegate after delegating", async () => {
+    const { democracy, addr1, addr2 } = await loadFixture(deployContract);
+    await democracy.registerCitizen(addr1.address);
+    await democracy.registerDelegate(addr2.address, 50);
+    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await democracy.connect(addr1).delegateVote(0, addr2.address);
+    await expect(democracy.connect(addr1).delegateVote(0, addr2.address)).to.be.revertedWith("Citizen already voted");
+  });
+
+  it("Should allow a citizen delegate their vote", async () => {
     const { democracy, addr1, addr2 } = await loadFixture(deployContract);
     await democracy.registerCitizen(addr1.address);
     await expect(democracy.registerDelegate(addr2.address, 50))
@@ -108,9 +134,26 @@ describe("Voting process", () => {
     await expect(democracy.citizenHasVoted(addr1.address, 0)).to.eventually.be.true;
   });
 
-  // it("Should not allow a non-registered citizen to vote", async () => {
-  //   const { democracy, addr1 } = await loadFixture(deployContract);
-  //   await democracy.createProposal(ethers.encodeBytes32String("Proposal 2"));
-  //   await expect(democracy.connect(addr1).vote(0, true)).to.be.revertedWith("Citizen is not registered");
-  // });
+  it("Should allow a delegate to vote", async () => {
+    const { democracy, addr1 } = await loadFixture(deployContract);
+    await democracy.registerDelegate(addr1.address, 50);
+    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    let choiceYes = 1;
+    await expect(democracy.connect(addr1).voteAsDelegate(0, choiceYes))
+      .to.emit(democracy, "DelegateVoted")
+      .withArgs(addr1.address, 0, choiceYes);
+    await expect(democracy.delegateHasVoted(addr1.address, 0)).to.eventually.be.true;
+  });
+
+  it("Should not allow a non-registered citizen to vote", async () => {
+    const { democracy, addr1 } = await loadFixture(deployContract);
+    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await expect(democracy.connect(addr1).voteAsCitizen(0, 1)).to.be.revertedWith("Citizen is not registered");
+  });
+
+  it("Should not allow a non-registered delegate to vote", async () => {
+    const { democracy, addr1 } = await loadFixture(deployContract);
+    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await expect(democracy.connect(addr1).voteAsDelegate(0, 1)).to.be.revertedWith("Delegate is not registered");
+  });
 });

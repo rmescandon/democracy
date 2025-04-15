@@ -23,3 +23,22 @@ The general rules of the contract are:
 - only the owner of the contract can register citizens
 - the proposals have a due date. Once such date is reached, the owner of the contract closes the votation
 - as part of the votation closing process, the votes not used by the citizens are distributed amongst the delegates proportionally as their share percentages until expiring all remaining votes
+
+# Install dependencies
+
+```sh
+npm install
+```
+
+# Launch tests
+
+```sh
+npx hardhat test
+```
+
+# Deploy locally
+
+```sh
+npx hardhat run scripts/deploy.js --network localhost
+``
+```
