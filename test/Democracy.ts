@@ -81,6 +81,30 @@ describe("Register delegates", () => {
       "Delegate already registered",
     );
   });
+
+  it("Should not allow unregistering a non-registered delegate", async () => {
+    const { democracy, addr1 } = await loadFixture(deployContract);
+    await expect(democracy.unregisterDelegate(addr1.address)).to.be.revertedWith("Delegate not registered");
+  });
+
+  it("Should unregister a delegate", async () => {
+    const { democracy, addr1 } = await loadFixture(deployContract);
+    let percentage = 50;
+    await democracy.registerDelegate(addr1.address, percentage);
+    await expect(democracy.unregisterDelegate(addr1.address))
+      .to.emit(democracy, "DelegateUnregistered")
+      .withArgs(addr1.address);
+    // Check if the delegate is unregistered
+    expect(await democracy.percentages(addr1.address)).to.equal(0);
+  });
+
+  it("Should not allow to unregister a delegate twice", async () => {
+    const { democracy, addr1 } = await loadFixture(deployContract);
+    let percentage = 50;
+    await democracy.registerDelegate(addr1.address, percentage);
+    await democracy.unregisterDelegate(addr1.address);
+    await expect(democracy.unregisterDelegate(addr1.address)).to.be.revertedWith("Delegate not registered");
+  });
 });
 
 describe("Voting process", () => {

@@ -44,6 +44,7 @@ contract Democracy is Ownable {
     event ProposalCreated(uint256 proposalId, bytes32 description);
     event CitizenRegistered(address citizen);
     event DelegateRegistered(address delegate, uint256 percentage);
+    event DelegateUnregistered(address delegate);
     event CitizenVoted(address citizen, uint256 proposalId, Choice choice);
     event CitizenDelegatedVote(address citizen, uint256 proposalId, address delegate);
     event DelegateVoted(address delegate, uint256 proposalId, Choice choice);
@@ -168,6 +169,18 @@ contract Democracy is Ownable {
         delegates.push(_delegate);
         percentages[_delegate] = _percentage;
         emit DelegateRegistered(_delegate, _percentage);
+    }
+
+    function unregisterDelegate(address _delegate) external onlyOwner delegateRegistered(_delegate) {
+        for (uint256 i = 0; i < delegates.length; i++) {
+            if (delegates[i] == _delegate) {
+                delegates[i] = delegates[delegates.length - 1];
+                delegates.pop();
+                break;
+            }
+        }
+        delete percentages[_delegate];
+        emit DelegateUnregistered(_delegate);
     }
 
     function voteAsDelegate(uint256 _proposalId, Choice _choice) external isDelegate delegateHasNotVoted(_proposalId) {
