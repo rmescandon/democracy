@@ -22,7 +22,8 @@ contract Democracy is Ownable {
     }
 
     struct Proposal {
-        bytes32 description;
+        bytes32 title;
+        bytes32[8] description; // 8 * 32 bytes = 256 bytes
         uint256 yesCount;
         uint256 noCount;
         bool done;
@@ -41,7 +42,7 @@ contract Democracy is Ownable {
     // holds the different proposals that can be voted
     Proposal[] public proposals;
 
-    event ProposalCreated(uint256 proposalId, bytes32 description);
+    event ProposalCreated(uint256 proposalId, bytes32 title);
     event CitizenRegistered(address citizen);
     event DelegateRegistered(address delegate, uint256 percentage);
     event DelegateUnregistered(address delegate);
@@ -50,14 +51,22 @@ contract Democracy is Ownable {
     event DelegateVoted(address delegate, uint256 proposalId, Choice choice);
 
     // creates a new proposal
-    function createProposal(bytes32 _description) external onlyOwner {
-        Proposal memory p = Proposal(_description, 0, 0, false, new address[](0), new DelegateVote[](delegates.length));
+    function createProposal(bytes32 _title, bytes32[8] memory _description) external onlyOwner {
+        Proposal memory p = Proposal(
+            _title,
+            _description,
+            0,
+            0,
+            false,
+            new address[](0),
+            new DelegateVote[](delegates.length)
+        );
         // initialize the delegate votes
         for (uint256 i = 0; i < delegates.length; i++) {
             p.delegateVotes[i] = DelegateVote(delegates[i], false, 0, Choice.Abstain);
         }
         proposals.push(p);
-        emit ProposalCreated(proposals.length - 1, _description);
+        emit ProposalCreated(proposals.length - 1, _title);
     }
 
     modifier isCitizen() {

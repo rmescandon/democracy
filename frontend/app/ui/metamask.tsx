@@ -2,7 +2,7 @@
 
 import { ethers } from "ethers";
 import { Account } from "@/app/lib/types";
-import { useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import Image from "next/image";
 
 declare global {
@@ -10,9 +10,35 @@ declare global {
     ethereum: any;
   }
 }
-
-export default function MetaMask() {
-  const [account, setAccount] = useState<Account | null>(null);
+export default function MetaMask({
+  account,
+  setAccount,
+}: {
+  account: Account | null;
+  setAccount: Dispatch<React.SetStateAction<Account | null>>;
+}) {
+  useEffect(() => {
+    const checkWalletConnection = async () => {
+      if (typeof window.ethereum !== "undefined") {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        if (accounts.length > 0) {
+          const address = accounts[0];
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const network = await provider.getNetwork();
+          const balance = await provider.getBalance(address);
+          setAccount({
+            address,
+            balance: ethers.formatEther(balance),
+            chainId: network.chainId.toString(),
+            network: network.name,
+          });
+        }
+      }
+    };
+    checkWalletConnection();
+  }, [setAccount]);
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== "undefined") {
@@ -51,31 +77,50 @@ export default function MetaMask() {
 
   if (account) {
     return (
-      <div>
-        <p>Account: {account.address}</p>
-        <p>Balance: {account.balance} ETH</p>
-        <p>Network: {account.network}</p>
-        <Image
-          src="/metamask-on.png"
-          alt="metamask"
-          className="mr-4 square-full hover:bg-red-100"
-          width={64}
-          height={64}
-          onClick={disconnectWallet}
-        />
+      <div className="flex items-center rounded-md bg-gray-50 p-4 md:p-6">
+        <div className="flex items-center">
+          <Image
+            src="/metamask-on.png"
+            alt="metamask"
+            className="mr-4 square-full bg-sky-100"
+            width={64}
+            height={64}
+            onClick={disconnectWallet}
+          />
+        </div>
+        <div className="flex flex-col">
+          <table className="w-full table-auto">
+            <tbody>
+              <tr>
+                <td className="text-sm font-medium text-gray-500">Account:</td>
+                <td className="text-sm text-gray-900">{account.address}</td>
+              </tr>
+              <tr>
+                <td className="text-sm font-medium text-gray-500">Balance:</td>
+                <td className="text-sm text-gray-900">{account.balance} ETH</td>
+              </tr>
+              <tr>
+                <td className="text-sm font-medium text-gray-500">Network:</td>
+                <td className="text-sm text-gray-900">{account.network}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
   return (
-    <div>
-      <Image
-        src="metamask.svg"
-        alt="metamask"
-        className="mr-4 square-full hover:bg-sky-100"
-        width={64}
-        height={64}
-        onClick={connectWallet}
-      />
+    <div className="flex items-center rounded-md bg-gray-50 p-4 md:p-6">
+      <div className="flex items-center">
+        <Image
+          src="/metamask-off.svg"
+          alt="metamask"
+          className="mr-4 square-full bg-red-100"
+          width={64}
+          height={64}
+          onClick={connectWallet}
+        />
+      </div>
     </div>
   );
 }

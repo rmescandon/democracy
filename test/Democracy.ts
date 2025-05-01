@@ -1,7 +1,7 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { toBytes32, toBytes256 } from "./utils";
 
 let deployContract = async () => {
   const [owner, addr1, addr2] = await ethers.getSigners();
@@ -20,16 +20,16 @@ describe("Democracy ownership", () => {
 describe("Proposal creation", () => {
   it("Should create a proposal", async () => {
     const { democracy } = await loadFixture(deployContract);
-    await expect(democracy.createProposal(ethers.encodeBytes32String("Proposal 1")))
+    await expect(democracy.createProposal(toBytes32("Proposal 1"), toBytes256("Proposal 1 Description")))
       .to.emit(democracy, "ProposalCreated")
       .withArgs(0, ethers.encodeBytes32String("Proposal 1"));
   });
 
   it("Should not allow non-owners to create proposals", async () => {
     const { democracy, addr1 } = await loadFixture(deployContract);
-    await expect(democracy.connect(addr1).createProposal(ethers.encodeBytes32String("Proposal 2"))).to.be.revertedWith(
-      "Caller is not the owner",
-    );
+    await expect(
+      democracy.connect(addr1).createProposal(toBytes32("Proposal 1"), toBytes256("Proposal 1 Description")),
+    ).to.be.revertedWith("Caller is not the owner");
   });
 });
 
@@ -111,7 +111,7 @@ describe("Voting process", () => {
   it("Should allow a citizen to vote", async () => {
     const { democracy, addr1 } = await loadFixture(deployContract);
     await democracy.registerCitizen(addr1.address);
-    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await democracy.createProposal(toBytes32("Proposal 1"), toBytes256("Proposal 1 Description"));
     await expect(democracy.connect(addr1).voteAsCitizen(0, 1))
       .to.emit(democracy, "CitizenVoted")
       .withArgs(addr1.address, 0, 1);
@@ -122,7 +122,7 @@ describe("Voting process", () => {
   it("Should not allow a citizen to vote twice", async () => {
     const { democracy, addr1 } = await loadFixture(deployContract);
     await democracy.registerCitizen(addr1.address);
-    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await democracy.createProposal(toBytes32("Proposal 1"), toBytes256("Proposal 1 Description"));
     await democracy.connect(addr1).voteAsCitizen(0, 1);
     await expect(democracy.connect(addr1).voteAsCitizen(0, 1)).to.be.revertedWith("Citizen already voted");
   });
@@ -131,7 +131,7 @@ describe("Voting process", () => {
     const { democracy, addr1, addr2 } = await loadFixture(deployContract);
     await democracy.registerCitizen(addr1.address);
     await democracy.registerDelegate(addr2.address, 50);
-    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await democracy.createProposal(toBytes32("Proposal 1"), toBytes256("Proposal 1 Description"));
     await democracy.connect(addr1).voteAsCitizen(0, 1);
     await expect(democracy.connect(addr1).delegateVote(0, addr2.address)).to.be.revertedWith("Citizen already voted");
   });
@@ -140,7 +140,7 @@ describe("Voting process", () => {
     const { democracy, addr1, addr2 } = await loadFixture(deployContract);
     await democracy.registerCitizen(addr1.address);
     await democracy.registerDelegate(addr2.address, 50);
-    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await democracy.createProposal(toBytes32("Proposal 1"), toBytes256("Proposal 1 Description"));
     await democracy.connect(addr1).delegateVote(0, addr2.address);
     await expect(democracy.connect(addr1).delegateVote(0, addr2.address)).to.be.revertedWith("Citizen already voted");
   });
@@ -151,7 +151,7 @@ describe("Voting process", () => {
     await expect(democracy.registerDelegate(addr2.address, 50))
       .to.emit(democracy, "DelegateRegistered")
       .withArgs(addr2.address, 50);
-    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await democracy.createProposal(toBytes32("Proposal 1"), toBytes256("Proposal 1 Description"));
     await expect(democracy.connect(addr1).delegateVote(0, addr2.address))
       .to.emit(democracy, "CitizenDelegatedVote")
       .withArgs(addr1.address, 0, addr2.address);
@@ -161,7 +161,7 @@ describe("Voting process", () => {
   it("Should allow a delegate to vote", async () => {
     const { democracy, addr1 } = await loadFixture(deployContract);
     await democracy.registerDelegate(addr1.address, 50);
-    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await democracy.createProposal(toBytes32("Proposal 1"), toBytes256("Proposal 1 Description"));
     let choiceYes = 1;
     await expect(democracy.connect(addr1).voteAsDelegate(0, choiceYes))
       .to.emit(democracy, "DelegateVoted")
@@ -171,13 +171,13 @@ describe("Voting process", () => {
 
   it("Should not allow a non-registered citizen to vote", async () => {
     const { democracy, addr1 } = await loadFixture(deployContract);
-    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await democracy.createProposal(toBytes32("Proposal 1"), toBytes256("Proposal 1 Description"));
     await expect(democracy.connect(addr1).voteAsCitizen(0, 1)).to.be.revertedWith("Citizen is not registered");
   });
 
   it("Should not allow a non-registered delegate to vote", async () => {
     const { democracy, addr1 } = await loadFixture(deployContract);
-    await democracy.createProposal(ethers.encodeBytes32String("Proposal 1"));
+    await democracy.createProposal(toBytes32("Proposal 1"), toBytes256("Proposal 1 Description"));
     await expect(democracy.connect(addr1).voteAsDelegate(0, 1)).to.be.revertedWith("Delegate is not registered");
   });
 });
