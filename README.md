@@ -38,7 +38,14 @@ npx hardhat test
 
 # Deploy locally
 
+1.- Start a local network node
+
 ```sh
-npx hardhat run scripts/deploy.js --network localhost
-``
+nxp hardhat node
+```
+
+2.- Deploy
+
+```sh
+npx hardhat ignition deploy ./ignition/modules/Democracy.ts --network localhost
 ```
