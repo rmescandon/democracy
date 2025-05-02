@@ -45,6 +45,32 @@ describe("Proposal creation", () => {
         .createProposal(ethers.encodeBytes32String("Proposal 1"), encodeBytes256String("Proposal 1 Description")),
     ).to.be.revertedWith("Caller is not the owner");
   });
+
+  it("Should allow deleting a proposal", async () => {
+    const { democracy } = await loadFixture(deployContract);
+    await democracy.createProposal(
+      ethers.encodeBytes32String("Proposal 1"),
+      encodeBytes256String("Proposal 1 Description"),
+    );
+    await expect(democracy.deleteProposal(0)).to.emit(democracy, "ProposalDeleted").withArgs(0);
+    expect(await democracy.proposalsCount()).to.equal(0);
+  });
+
+  it("Should not allow deleting a non-existing proposal", async () => {
+    const { democracy } = await loadFixture(deployContract);
+    await expect(democracy.deleteProposal(0)).to.be.revertedWith("Proposal does not exist");
+  });
+
+  it("Should not allow deleting a proposal with votes", async () => {
+    const { democracy, addr1 } = await loadFixture(deployContract);
+    await democracy.createProposal(
+      ethers.encodeBytes32String("Proposal 1"),
+      encodeBytes256String("Proposal 1 Description"),
+    );
+    await democracy.registerCitizen(addr1.address);
+    await democracy.connect(addr1).voteAsCitizen(0, 1);
+    await expect(democracy.deleteProposal(0)).to.be.revertedWith("Proposal already voted");
+  });
 });
 
 describe("Register citizens", () => {

@@ -76,7 +76,7 @@ export default function MetaMask({
           <Image
             src="/metamask-on.png"
             alt="metamask"
-            className="mr-4 square-full bg-sky-100"
+            className="mr-4 square-full bg-sky-100 hover:cursor-pointer"
             width={64}
             height={64}
             onClick={disconnectWallet}
@@ -109,7 +109,7 @@ export default function MetaMask({
         <Image
           src="/metamask-off.svg"
           alt="metamask"
-          className="mr-4 square-full bg-red-100"
+          className="mr-4 square-full bg-red-100 hover:cursor-pointer"
           width={64}
           height={64}
           onClick={connectWallet}

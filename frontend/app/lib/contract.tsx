@@ -88,3 +88,9 @@ export const getProposals = async (): Promise<Proposal[]> => {
   }
   return proposals;
 };
+
+export const deleteProposal = async (id: number) => {
+  const contract = await getContract({ withSigner: true });
+  const tx = await contract.deleteProposal(id);
+  await tx.wait();
+};

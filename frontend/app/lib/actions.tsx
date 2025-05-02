@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { createProposal as createProposalInContract } from "@/app/lib/contract";
+import { deleteProposal as deleteProposalFromContract } from "@/app/lib/contract";
 import { redirect } from "next/navigation";
 
 const proposalFormSchema = z.object({
@@ -16,5 +17,10 @@ export const createProposal = async (formData: FormData) => {
     description: formData.get("description"),
   });
   await createProposalInContract({ title, description });
+  redirect("/proposals");
+};
+
+export const deleteProposal = async (id: number) => {
+  await deleteProposalFromContract(Number(id));
   redirect("/proposals");
 };

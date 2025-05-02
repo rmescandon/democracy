@@ -43,6 +43,8 @@ contract Democracy is Ownable {
     Proposal[] public proposals;
 
     event ProposalCreated(uint256 proposalId, bytes32 title);
+    event ProposalDeleted(uint256 proposalId);
+    event ProposalFinished(uint256 proposalId);
     event CitizenRegistered(address citizen);
     event DelegateRegistered(address delegate, uint256 percentage);
     event DelegateUnregistered(address delegate);
@@ -78,6 +80,19 @@ contract Democracy is Ownable {
 
     function proposalsCount() external view returns (uint256) {
         return proposals.length;
+    }
+
+    function deleteProposal(uint256 _proposalId) external onlyOwner {
+        require(_proposalId < proposals.length, "Proposal does not exist");
+        Proposal memory proposal = proposals[_proposalId];
+        require(!proposal.done, "Proposal already finished");
+        require(proposal.yesCount == 0 && proposal.noCount == 0, "Proposal already voted");
+        // remove the proposal from the array
+        for (uint256 i = _proposalId; i < proposals.length - 1; i++) {
+            proposals[i] = proposals[i + 1];
+        }
+        proposals.pop();
+        emit ProposalDeleted(_proposalId);
     }
 
     modifier isCitizen() {
@@ -293,5 +308,14 @@ contract Democracy is Ownable {
                 proposal.noCount += 1;
             }
         }
+    }
+
+    function finishVoting(uint256 _proposalId) external onlyOwner {
+        Proposal storage proposal = proposals[_proposalId];
+        require(!proposal.done, "Proposal already finished");
+        require(proposal.yesCount > 0 || proposal.noCount > 0, "Proposal has no votes");
+        _distributeDelegations(_proposalId);
+        proposal.done = true;
+        emit ProposalFinished(_proposalId);
     }
 }
