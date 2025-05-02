@@ -14,8 +14,5 @@ export const createProposal = async (formData: FormData) => {
     title: formData.get("title"),
     description: formData.get("description"),
   });
-  console.log("Title:", title);
-  console.log("Description:", description);
-  const proposalId = await createProposalInContract({ title, description });
-  console.log("Proposal ID:", proposalId);
+  await createProposalInContract({ title, description });
 };

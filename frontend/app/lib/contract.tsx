@@ -1,35 +1,47 @@
 "use client";
 
-import { Contract, BrowserProvider } from "ethers";
+import { Contract, BrowserProvider, encodeBytes32String, decodeBytes32String, hexlify } from "ethers";
 import contractJson from "@/abi/Democracy.json";
+import { Proposal } from "@/app/lib/types";
 
-// const contractAddress = process.env.CONTRACT_ADDRESS;
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // Replace with your contract address
+const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
 const contractABI = contractJson.abi;
 
-const getContract = async (rw: boolean = false) => {
-  console.log("Contract address:", contractAddress);
+const getContract = async ({ withSigner = false }: { withSigner: boolean } = { withSigner: false }) => {
   if (!contractAddress) {
     throw new Error("Contract address is not defined");
   }
   const provider = new BrowserProvider(window.ethereum);
-  if (rw) {
+  if (withSigner) {
     const signer = await provider.getSigner();
     return new Contract(contractAddress, contractABI, signer);
   }
   return new Contract(contractAddress, contractABI, provider);
 };
 
-export const createProposal = async ({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}): Promise<number> => {
-  const contract = await getContract(true);
-  const tx = await contract.createProposal(title, description);
-  const receipt = await tx.wait();
-  console.log("Transaction receipt:", receipt);
-  return receipt;
+export const createProposal = async ({ title, description }: { title: string; description: string }) => {
+  const contract = await getContract({ withSigner: true });
+  const tx = await contract.createProposal(encodeBytes32String(title), description);
+  await tx.wait();
+};
+
+export const getProposals = async (): Promise<Proposal[]> => {
+  const contract = await getContract();
+  console.log("Contract: ", contract);
+  const count = await contract.proposalsCount();
+  console.log("Count: ", count);
+  const proposals: Proposal[] = [];
+  for (let i = 0; i < count; i++) {
+    const proposal = await contract.proposals(i);
+    proposals.push({
+      id: i,
+      title: decodeBytes32String(proposal.title),
+      description: proposal.description,
+      yesCount: proposal.yesCount,
+      noCount: proposal.noCount,
+      completed: proposal.completed,
+    });
+  }
+  console.log("Proposals: ", proposals);
+  return proposals;
 };

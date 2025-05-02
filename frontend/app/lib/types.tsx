@@ -1,9 +1,10 @@
 export type Proposal = {
-  id: string;
+  id: number;
+  title: string;
   description: string;
+  yesCount: number;
+  noCount: number;
   completed: boolean;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type Account = {
