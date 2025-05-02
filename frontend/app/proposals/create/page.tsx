@@ -5,6 +5,7 @@ import Breadcrumbs from "@/app/ui/proposals/breadcrumbs";
 import MetaMask from "@/app/ui/metamask";
 import { Account } from "@/app/lib/types";
 import { useState } from "react";
+import ErrorBoundary from "@/app/ui/error-boundary";
 
 export default function Page() {
   const [account, setAccount] = useState<Account | null>(null);
@@ -26,7 +27,9 @@ export default function Page() {
         <MetaMask account={account} setAccount={setAccount} />
       </div>
       <div className="mt-6">
-        <Form />
+        <ErrorBoundary>
+          <Form />
+        </ErrorBoundary>
       </div>
     </main>
   );
