@@ -10,6 +10,7 @@ declare global {
     ethereum: any;
   }
 }
+
 export default function MetaMask({
   account,
   setAccount,
@@ -24,21 +25,24 @@ export default function MetaMask({
           method: "eth_accounts",
         });
         if (accounts.length > 0) {
-          const address = accounts[0];
-          const provider = new ethers.BrowserProvider(window.ethereum);
-          const network = await provider.getNetwork();
-          const balance = await provider.getBalance(address);
-          setAccount({
-            address,
-            balance: ethers.formatEther(balance),
-            chainId: network.chainId.toString(),
-            network: network.name,
-          });
+          doSetAccount(accounts[0]);
         }
       }
     };
     checkWalletConnection();
   }, [setAccount]);
+
+  const doSetAccount = async (address: string) => {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const network = await provider.getNetwork();
+    const balance = await provider.getBalance(address);
+    setAccount({
+      address,
+      balance: ethers.formatEther(balance),
+      chainId: network.chainId.toString(),
+      network: network.name,
+    });
+  };
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== "undefined") {
@@ -51,17 +55,7 @@ export default function MetaMask({
         for (let i = 0; i < accounts.length; i++) {
           console.log("account: ", accounts[i]);
         }
-
-        const address = accounts[0];
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const network = await provider.getNetwork();
-        const balance = await provider.getBalance(address);
-        setAccount({
-          address,
-          balance: ethers.formatEther(balance),
-          chainId: network.chainId.toString(),
-          network: network.name,
-        });
+        doSetAccount(accounts[0]);
       } catch (error) {
         console.error("Error connecting to MetaMask:", error);
       }
