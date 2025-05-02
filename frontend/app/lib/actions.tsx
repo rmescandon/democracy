@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { createProposal as createProposalInContract } from "@/app/lib/contract";
+import { redirect } from "next/navigation";
 
 const proposalFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(32, "Title must be less than 32 characters"),
@@ -15,4 +16,5 @@ export const createProposal = async (formData: FormData) => {
     description: formData.get("description"),
   });
   await createProposalInContract({ title, description });
+  redirect("/proposals");
 };

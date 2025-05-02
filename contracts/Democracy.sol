@@ -23,7 +23,7 @@ contract Democracy is Ownable {
 
     struct Proposal {
         bytes32 title;
-        string description;
+        bytes32[8] description; // 8 * 32 bytes = 256 bytes
         uint256 yesCount;
         uint256 noCount;
         bool done;
@@ -51,7 +51,7 @@ contract Democracy is Ownable {
     event DelegateVoted(address delegate, uint256 proposalId, Choice choice);
 
     // creates a new proposal
-    function createProposal(bytes32 _title, string memory _description) external onlyOwner {
+    function createProposal(bytes32 _title, bytes32[8] memory _description) external onlyOwner {
         Proposal memory p = Proposal(
             _title,
             _description,
@@ -67,6 +67,13 @@ contract Democracy is Ownable {
         }
         proposals.push(p);
         emit ProposalCreated(proposals.length - 1, _title);
+    }
+
+    function getProposal(
+        uint256 _proposalId
+    ) external view returns (bytes32, bytes32[8] memory, uint256, uint256, bool) {
+        Proposal memory p = proposals[_proposalId];
+        return (p.title, p.description, p.yesCount, p.noCount, p.done);
     }
 
     function proposalsCount() external view returns (uint256) {

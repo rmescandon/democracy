@@ -10,18 +10,24 @@ export default function Page() {
   const [account, setAccount] = useState<Account | null>(null);
   return (
     <main>
-      <Breadcrumbs
-        breadcrumbs={[
-          { label: "Proposals", href: "/proposals" },
-          {
-            label: "Create Proposal",
-            href: "/proposals/create",
-            active: true,
-          },
-        ]}
-      />
-      <MetaMask account={account} setAccount={setAccount} />
-      <Form />
+      <div className="flex w-full items-center justify-between">
+        <Breadcrumbs
+          breadcrumbs={[
+            { label: "Proposals", href: "/proposals" },
+            {
+              label: "Create Proposal",
+              href: "/proposals/create",
+              active: true,
+            },
+          ]}
+        />
+      </div>
+      <div className="flex w-full items-center justify-between">
+        <MetaMask account={account} setAccount={setAccount} />
+      </div>
+      <div className="mt-6">
+        <Form />
+      </div>
     </main>
   );
 }

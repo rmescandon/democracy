@@ -71,7 +71,7 @@ export default function MetaMask({
 
   if (account) {
     return (
-      <div className="flex items-center rounded-md bg-gray-50 p-4 md:p-6">
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <div className="flex items-center">
           <Image
             src="/metamask-on.png"
@@ -104,7 +104,7 @@ export default function MetaMask({
     );
   }
   return (
-    <div className="flex items-center rounded-md bg-gray-50 p-4 md:p-6">
+    <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
       <div className="flex items-center">
         <Image
           src="/metamask-off.svg"
