@@ -1,27 +1,26 @@
 import Link from "next/link";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { deleteProposal } from "@/app/lib/actions";
+import { StarIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { getProposals, deleteProposal } from "@/app/lib/contract";
+import { Dispatch, SetStateAction } from "react";
+import { Proposal } from "@/app/lib/types";
 
-export function UpdateProposal({ id }: { id: number }) {
+export function VoteProposal({ id }: { id: number }) {
   return (
-    <Link href={`/proposals/${id}/edit`} className="rounded-md border p-1 hover:bg-gray-100">
-      <PencilIcon className="w-5" />
+    <Link href={`/proposals/${id}/vote`} className="rounded-md border p-1 hover:bg-gray-100">
+      <StarIcon className="w-5" />
     </Link>
   );
 }
 
-// export function DeleteProposal({ id }: { id: number }) {
-//   return (
-//     <Link href={`/proposals/${id}/delete`} className="rounded-md border p-1 hover:bg-gray-100">
-//       <TrashIcon className="w-5" />
-//     </Link>
-//   );
-// }
+export function DeleteProposal({ id, callback }: { id: number; callback: Dispatch<SetStateAction<Proposal[]>> }) {
+  const handleDeleteProposal = async () => {
+    await deleteProposal(id);
+    const proposals = await getProposals();
+    callback(proposals);
+  };
 
-export function DeleteProposal({ id }: { id: number }) {
-  const deleteProposalWithId = deleteProposal.bind(null, id);
   return (
-    <form action={deleteProposalWithId}>
+    <form action={handleDeleteProposal}>
       <button type="submit" className="rounded-md border p-1 hover:bg-gray-100 hover:cursor-pointer">
         <TrashIcon className="w-5" />
       </button>

@@ -1,19 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getProposals } from "@/app/lib/contract";
+import { getProposals, deleteProposal } from "@/app/lib/contract";
 import { Proposal } from "@/app/lib/types";
 import ProposalStatus from "@/app/ui/proposals/status";
-import { UpdateProposal, DeleteProposal } from "@/app/ui/proposals/buttons";
+import { VoteProposal, DeleteProposal } from "@/app/ui/proposals/buttons";
 import Link from "next/link";
 import { HandThumbDownIcon, HandThumbUpIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
+import { get } from "http";
 
 export default function Proposals() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
+
   useEffect(() => {
-    getProposals().then((proposals) => {
+    (async () => {
+      const proposals = await getProposals();
       setProposals(proposals);
-    });
+    })();
   }, [setProposals]);
 
   return (
@@ -44,8 +48,8 @@ export default function Proposals() {
                     >
                       <span className="hidden md:block">Create Proposal</span> <PlusIcon className="h-5 md:ml-4" />
                     </Link>
-                    <UpdateProposal id={proposal.id} />
-                    <DeleteProposal id={proposal.id} />
+                    <VoteProposal id={proposal.id} />
+                    <DeleteProposal id={proposal.id} callback={setProposals} />
                   </div>
                 </div>
               </div>
@@ -93,8 +97,8 @@ export default function Proposals() {
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateProposal id={proposal.id} />
-                      <DeleteProposal id={proposal.id} />
+                      <VoteProposal id={proposal.id} />
+                      <DeleteProposal id={proposal.id} callback={setProposals} />
                     </div>
                   </td>
                 </tr>

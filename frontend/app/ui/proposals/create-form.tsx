@@ -1,11 +1,30 @@
 import Link from "next/link";
 import { DocumentTextIcon, NewspaperIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/app/ui/button";
-import { createProposal } from "@/app/lib/actions";
+import { createProposal } from "@/app/lib/contract";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+
+const proposalFormSchema = z.object({
+  title: z.string().min(1, "Title is required").max(32, "Title must be less than 32 characters"),
+  description: z.string().min(1, "Description is required").max(256, "Description must be less than 256 characters"),
+});
 
 export default function Form() {
+  const router = useRouter();
+
+  const handleSubmit = async (formData: FormData) => {
+    const { title, description } = proposalFormSchema.parse({
+      title: formData.get("title"),
+      description: formData.get("description"),
+    });
+
+    await createProposal({ title, description });
+    router.push("/proposals");
+  };
+
   return (
-    <form action={createProposal}>
+    <form action={handleSubmit}>
       <div>
         {/* Title */}
         <div className="mb-4">

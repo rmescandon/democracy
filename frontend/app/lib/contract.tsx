@@ -40,7 +40,7 @@ const encodeBytes256String = (str: string): string[] => {
   return chunks;
 };
 
-export const decodeBytes256String = (chunks: string[]): string => {
+const decodeBytes256String = (chunks: string[]): string => {
   // 1. Process each chunk to remove padding and convert to bytes
   const byteArrays = chunks.map((chunk) => {
     const bytes = ethers.getBytes(chunk);
@@ -65,6 +65,8 @@ export const decodeBytes256String = (chunks: string[]): string => {
   return new TextDecoder().decode(result);
 };
 
+// PUBLIC FUNCTIONS
+// 1.- Proposals
 export const createProposal = async ({ title, description }: { title: string; description: string }) => {
   const contract = await getContract({ withSigner: true });
   const tx = await contract.createProposal(ethers.encodeBytes32String(title), encodeBytes256String(description));
