@@ -4,7 +4,7 @@ import MetaMask from "@/app/ui/metamask";
 import { Account } from "@/app/lib/types";
 import { useState } from "react";
 import ErrorBoundary from "@/app/ui/error-boundary";
-import RegisterForm from "@/app/ui/register/register-form";
+import RegisterForm from "@/app/ui/delegates/register-form";
 
 export default function Page() {
   const [account, setAccount] = useState<Account | null>(null);

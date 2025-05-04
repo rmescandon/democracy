@@ -1,6 +1,5 @@
 import Link from "next/link";
 import NavLinks from "@/app/ui/nav-links";
-import MetaMask from "@/app/ui/metamask";
 
 export default function SideNav() {
   return (
