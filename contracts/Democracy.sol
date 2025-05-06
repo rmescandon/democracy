@@ -219,6 +219,13 @@ contract Democracy is Ownable {
         address _delegate,
         uint256 _percentage
     ) external onlyOwner delegateNotRegistered(_delegate) {
+        // require that the percentage is between 0 and 100 counting all the delegates +  the new one
+        uint256 totalPercentage = 0;
+        for (uint256 i = 0; i < delegates.length; i++) {
+            totalPercentage += percentages[delegates[i]];
+        }
+        totalPercentage += _percentage;
+        require(totalPercentage <= 100, "Total percentage exceeds 100");
         delegates.push(_delegate);
         percentages[_delegate] = _percentage;
         emit DelegateRegistered(_delegate, _percentage);

@@ -1,7 +1,6 @@
 import { NewspaperIcon, PercentBadgeIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/app/ui/button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { registerDelegate } from "@/app/lib/contract";
 import { z } from "zod";
 
@@ -11,14 +10,12 @@ const delegateFormSchema = z.object({
 });
 
 export default function RegisterForm() {
-  const router = useRouter();
   const handleSubmit = async (formData: FormData) => {
     const { address, percentage } = delegateFormSchema.parse({
       address: formData.get("address"),
       percentage: formData.get("percentage"),
     });
     await registerDelegate(address, percentage);
-    router.push("/delegates");
   };
 
   return (
@@ -64,7 +61,7 @@ export default function RegisterForm() {
             href="/delegates"
             className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
           >
-            Cancel
+            Back
           </Link>
           <Button type="submit">Register</Button>
         </div>

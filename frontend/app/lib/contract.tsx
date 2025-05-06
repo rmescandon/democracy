@@ -97,6 +97,12 @@ export const deleteProposal = async (id: number) => {
   await tx.wait();
 };
 
+export const finishVoting = async (id: number) => {
+  const contract = await getContract({ withSigner: true });
+  const tx = await contract.finishVoting(id);
+  await tx.wait();
+};
+
 // 2.- Citizens
 export const registerCitizen = async (address: string) => {
   const contract = await getContract({ withSigner: true });
@@ -115,10 +121,23 @@ export const getCitizens = async (): Promise<string[]> => {
   return citizens;
 };
 
+export const listenToCitizenRegistered = async (callback: (address: string) => void) => {
+  const contract = await getContract();
+  contract.on("CitizenRegistered", (address: string) => {
+    callback(address);
+  });
+};
+
 // 3.- Delegates
 export const registerDelegate = async (address: string, percentage: number) => {
   const contract = await getContract({ withSigner: true });
   const tx = await contract.registerDelegate(address, percentage);
+  await tx.wait();
+};
+
+export const unregisterDelegate = async (address: string) => {
+  const contract = await getContract({ withSigner: true });
+  const tx = await contract.unregisterDelegate(address);
   await tx.wait();
 };
 
@@ -131,4 +150,18 @@ export const getDelegates = async (): Promise<{ address: string; percentage: num
     delegates.push({ address, percentage });
   }
   return delegates;
+};
+
+export const listenToDelegateRegistered = async (callback: (address: string, percentage: number) => void) => {
+  const contract = await getContract();
+  contract.on("DelegateRegistered", (address: string, percentage: number) => {
+    callback(address, percentage);
+  });
+};
+
+export const listenToDelegateUnregistered = async (callback: (address: string) => void) => {
+  const contract = await getContract();
+  contract.on("DelegateUnregistered", (address: string) => {
+    callback(address);
+  });
 };

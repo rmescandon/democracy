@@ -9,6 +9,7 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import ErrorBoundary from "@/app/ui/error-boundary";
 import Delegates from "@/app/ui/delegates/delegates";
+import { DelegateUnegisteredAlert } from "@/app/ui/delegates/events";
 
 export default function Page() {
   const [account, setAccount] = useState<Account | null>(null);
@@ -19,6 +20,9 @@ export default function Page() {
       </div>
       <div className="flex w-full items-center justify-between">
         <MetaMask account={account} setAccount={setAccount} />
+      </div>
+      <div className="mt-6">
+        <DelegateUnegisteredAlert />
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         {/* <Search placeholder="Search proposals..." /> */}

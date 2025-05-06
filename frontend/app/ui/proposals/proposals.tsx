@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getProposals } from "@/app/lib/contract";
 import { Proposal } from "@/app/lib/types";
 import ProposalStatus from "@/app/ui/proposals/status";
-import { VoteProposal, DeleteProposal } from "@/app/ui/proposals/buttons";
+import { VoteProposal, DeleteProposal, ProposalActionButton } from "@/app/ui/proposals/buttons";
 import Link from "next/link";
 import { HandThumbDownIcon, HandThumbUpIcon, PlusIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
@@ -44,19 +44,24 @@ export default function Proposals() {
                   <ProposalStatus done={proposal.completed} />
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
-                  <div>
-                    <p className="text-xl font-medium">{proposal.yesCount}</p>
-                    <p>{proposal.noCount}</p>
+                  <div className="text-xl font-medium justify-start">
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td className="pr-2">
+                            <HandThumbUpIcon className="h-5 w-5 text-white stroke-green-400" />
+                          </td>
+                          <td className="pr-4">{proposal.yesCount}</td>
+                          <td className="pr-2">
+                            <HandThumbDownIcon className="h-5 w-5 text-white stroke-red-400" />
+                          </td>
+                          <td className="pr-4">{proposal.noCount}</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Link
-                      href="/proposals/create"
-                      className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                    >
-                      <span className="hidden md:block">Create Proposal</span> <PlusIcon className="h-5 md:ml-4" />
-                    </Link>
-                    <VoteProposal id={proposal.id} />
-                    <DeleteProposal id={proposal.id} callback={setProposals} />
+                    <ProposalActionButton proposal={proposal} callback={setProposals} />
                   </div>
                 </div>
               </div>
@@ -104,8 +109,7 @@ export default function Proposals() {
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <VoteProposal id={proposal.id} />
-                      <DeleteProposal id={proposal.id} callback={setProposals} />
+                      <ProposalActionButton proposal={proposal} callback={setProposals} />
                     </div>
                   </td>
                 </tr>

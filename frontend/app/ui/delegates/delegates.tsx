@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getDelegates } from "@/app/lib/contract";
 import { Delegate } from "@/app/lib/types";
+import { UnregisterDelegate } from "@/app/ui/delegates/buttons";
 import { z } from "zod";
 
 const proposalFormSchema = z.object({
@@ -74,6 +75,11 @@ export default function Proposals() {
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       <p>{delegate.percentage}</p>
+                    </div>
+                  </td>
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <div className="flex items-center gap-3">
+                      <UnregisterDelegate address={delegate.address} callback={setDelegates} />
                     </div>
                   </td>
                 </tr>

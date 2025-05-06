@@ -3,14 +3,11 @@ import { Button } from "@/app/ui/button";
 import Link from "next/link";
 import { registerCitizen } from "@/app/lib/contract";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
 
 export default function RegisterForm() {
-  const router = useRouter();
   const handleSubmit = async (formData: FormData) => {
     const address = formData.get("address") as string;
     await registerCitizen(address);
-    router.push("/citizens");
   };
 
   return (
@@ -37,7 +34,7 @@ export default function RegisterForm() {
             href="/citizens"
             className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
           >
-            Cancel
+            Back
           </Link>
           <Button type="submit">Register</Button>
         </div>
