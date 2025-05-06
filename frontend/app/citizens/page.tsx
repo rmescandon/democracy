@@ -6,6 +6,7 @@ import { useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import ErrorBoundary from "@/app/ui/error-boundary";
+import Citizens from "@/app/ui/citizens/citizens";
 
 export default function Page() {
   const [account, setAccount] = useState<Account | null>(null);
@@ -27,9 +28,9 @@ export default function Page() {
         </Link>
       </div>
       <div className="mt-6">
-        {/* <ErrorBoundary>
-          <Delegates />
-        </ErrorBoundary> */}
+        <ErrorBoundary>
+          <Citizens />
+        </ErrorBoundary>
       </div>
     </main>
   );

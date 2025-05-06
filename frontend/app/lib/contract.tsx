@@ -96,3 +96,39 @@ export const deleteProposal = async (id: number) => {
   const tx = await contract.deleteProposal(id);
   await tx.wait();
 };
+
+// 2.- Citizens
+export const registerCitizen = async (address: string) => {
+  const contract = await getContract({ withSigner: true });
+  const tx = await contract.registerCitizen(address);
+  await tx.wait();
+};
+
+export const getCitizens = async (): Promise<string[]> => {
+  const contract = await getContract();
+  const count = await contract.citizensCount();
+  const citizens: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const citizen = await contract.getCitizen(i);
+    citizens.push(citizen);
+  }
+  return citizens;
+};
+
+// 3.- Delegates
+export const registerDelegate = async (address: string, percentage: number) => {
+  const contract = await getContract({ withSigner: true });
+  const tx = await contract.registerDelegate(address, percentage);
+  await tx.wait();
+};
+
+export const getDelegates = async (): Promise<{ address: string; percentage: number }[]> => {
+  const contract = await getContract();
+  const count = await contract.delegatesCount();
+  const delegates: { address: string; percentage: number }[] = [];
+  for (let i = 0; i < count; i++) {
+    const [address, percentage] = await contract.getDelegate(i);
+    delegates.push({ address, percentage });
+  }
+  return delegates;
+};

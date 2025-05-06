@@ -1,6 +1,6 @@
 "use client";
 
-import Proposals from "@/app/ui/proposal";
+import Proposals from "@/app/ui/proposals/proposals";
 import MetaMask from "@/app/ui/metamask";
 // import Search from "@/app/ui/search";
 import { Account } from "@/app/lib/types";
@@ -8,6 +8,7 @@ import { useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import ErrorBoundary from "@/app/ui/error-boundary";
+import Delegates from "@/app/ui/delegates/delegates";
 
 export default function Page() {
   const [account, setAccount] = useState<Account | null>(null);
@@ -29,9 +30,9 @@ export default function Page() {
         </Link>
       </div>
       <div className="mt-6">
-        {/* <ErrorBoundary>
+        <ErrorBoundary>
           <Delegates />
-        </ErrorBoundary> */}
+        </ErrorBoundary>
       </div>
     </main>
   );

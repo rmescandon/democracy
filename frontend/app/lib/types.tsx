@@ -13,3 +13,8 @@ export type Account = {
   chainId: string;
   network: string;
 };
+
+export type Delegate = {
+  address: string;
+  percentage: number;
+};

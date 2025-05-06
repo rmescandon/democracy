@@ -1,22 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getProposals, deleteProposal } from "@/app/lib/contract";
+import { getProposals } from "@/app/lib/contract";
 import { Proposal } from "@/app/lib/types";
 import ProposalStatus from "@/app/ui/proposals/status";
 import { VoteProposal, DeleteProposal } from "@/app/ui/proposals/buttons";
 import Link from "next/link";
-import { HandThumbDownIcon, HandThumbUpIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
-import { get } from "http";
+import { HandThumbDownIcon, HandThumbUpIcon, PlusIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
 export default function Proposals() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     (async () => {
-      const proposals = await getProposals();
-      setProposals(proposals);
+      try {
+        const proposals = await getProposals();
+        setProposals(proposals);
+      } catch (error) {
+        if (error instanceof Error) {
+          setErrorMessage(`Error fetching proposals: ${error}`);
+        } else {
+          setErrorMessage("Error fetching proposals: An unknown error occurred.");
+        }
+      }
     })();
   }, [setProposals]);
 
@@ -107,6 +114,11 @@ export default function Proposals() {
           </table>
         </div>
       </div>
+      {errorMessage && (
+        <div>
+          <p className="text-sm text-red-500">{errorMessage}</p>
+        </div>
+      )}
     </div>
   );
 }

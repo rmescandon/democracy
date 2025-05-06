@@ -1,6 +1,6 @@
 "use client";
 
-import Proposals from "@/app/ui/proposal";
+import Proposals from "@/app/ui/proposals/proposals";
 import MetaMask from "@/app/ui/metamask";
 // import Search from "@/app/ui/search";
 import { Account } from "@/app/lib/types";

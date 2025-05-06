@@ -1,10 +1,20 @@
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/app/ui/button";
 import Link from "next/link";
+import { registerCitizen } from "@/app/lib/contract";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
 
 export default function RegisterForm() {
+  const router = useRouter();
+  const handleSubmit = async (formData: FormData) => {
+    const address = formData.get("address") as string;
+    await registerCitizen(address);
+    router.push("/citizens");
+  };
+
   return (
-    <form>
+    <form action={handleSubmit}>
       {/* address */}
       <div className="mb-4">
         <label htmlFor="address" className="mb-2 block text-sm font-medium">

@@ -95,6 +95,24 @@ contract Democracy is Ownable {
         emit ProposalDeleted(_proposalId);
     }
 
+    function getCitizen(uint256 _index) external view returns (address) {
+        require(_index < citizens.length, "Citizen does not exist");
+        return citizens[_index];
+    }
+
+    function citizensCount() external view returns (uint256) {
+        return citizens.length;
+    }
+
+    function getDelegate(uint256 _index) external view returns (address, uint256) {
+        require(_index < delegates.length, "Delegate does not exist");
+        return (delegates[_index], percentages[delegates[_index]]);
+    }
+
+    function delegatesCount() external view returns (uint256) {
+        return delegates.length;
+    }
+
     modifier isCitizen() {
         bool found = false;
         for (uint256 i = 0; i < citizens.length; i++) {
