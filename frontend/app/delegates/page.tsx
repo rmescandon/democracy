@@ -5,7 +5,7 @@ import ErrorBoundary from "@/app/ui/error-boundary";
 import Delegates from "@/app/ui/delegates/delegates";
 import { DelegateUnegisteredAlert } from "@/app/ui/delegates/events";
 
-export default function Page() {
+export default async function Page() {
   return (
     <main>
       <div className="flex w-full items-center justify-between">

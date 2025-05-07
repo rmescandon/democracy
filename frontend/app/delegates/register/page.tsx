@@ -1,8 +1,8 @@
 import ErrorBoundary from "@/app/ui/error-boundary";
-import RegisterForm from "@/app/ui/delegates/register-form";
+import RegisterDelegateForm from "@/app/ui/delegates/register-form";
 import { DelegateRegisteredAlert } from "@/app/ui/delegates/events";
 
-export default function Page() {
+export default async function Page() {
   return (
     <main>
       <div className="flex w-full items-center justify-between">
@@ -13,7 +13,7 @@ export default function Page() {
       </div>
       <div className="mt-6">
         <ErrorBoundary>
-          <RegisterForm />
+          <RegisterDelegateForm />
         </ErrorBoundary>
       </div>
     </main>

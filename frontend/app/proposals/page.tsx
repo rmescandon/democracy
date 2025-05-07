@@ -1,15 +1,10 @@
-"use client";
-
 import Proposals from "@/app/ui/proposals/proposals";
 // import Search from "@/app/ui/search";
-import { Account } from "@/app/lib/types";
-import { useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import ErrorBoundary from "@/app/ui/error-boundary";
 
-export default function Page() {
-  const [account, setAccount] = useState<Account | null>(null);
+export default async function Page() {
   return (
     <main>
       <div className="flex w-full items-center justify-between">

@@ -12,7 +12,7 @@ const proposalFormSchema = z.object({
   description: z.string().min(1, "Description is required").max(256, "Description must be less than 256 characters"),
 });
 
-export default function CreateProposalForm() {
+export default function VoteProposalForm() {
   const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {

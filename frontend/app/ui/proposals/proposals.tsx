@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import { getProposals } from "@/app/lib/contract";
 import { Proposal } from "@/app/lib/types";
 import ProposalStatus from "@/app/ui/proposals/status";
-import { VoteProposal, DeleteProposal, ProposalActionButton } from "@/app/ui/proposals/buttons";
-import Link from "next/link";
-import { HandThumbDownIcon, HandThumbUpIcon, PlusIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { ProposalActionButton } from "@/app/ui/proposals/buttons";
+import { HandThumbDownIcon, HandThumbUpIcon } from "@heroicons/react/24/outline";
 
 export default function Proposals() {
   const [proposals, setProposals] = useState<Proposal[]>([]);

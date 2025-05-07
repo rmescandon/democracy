@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getCitizens } from "@/app/lib/contract";
 
-export default function Proposals() {
+export default function Citizens() {
   const [citizens, setCitizens] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
 

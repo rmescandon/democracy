@@ -11,7 +11,7 @@ const delegateFormSchema = z.object({
   percentage: z.coerce.number().min(1, "Percentage is required").max(100, "Percentage must be between 1 and 100"),
 });
 
-export default function RegisterForm() {
+export default function RegisterDelegateForm() {
   const handleSubmit = async (formData: FormData) => {
     const { address, percentage } = delegateFormSchema.parse({
       address: formData.get("address"),

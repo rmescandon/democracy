@@ -3,7 +3,7 @@ import Link from "next/link";
 import ErrorBoundary from "@/app/ui/error-boundary";
 import Citizens from "@/app/ui/citizens/citizens";
 
-export default function Page() {
+export default async function Page() {
   return (
     <main>
       <div className="flex w-full items-center justify-between">

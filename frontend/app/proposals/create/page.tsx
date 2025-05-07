@@ -1,13 +1,9 @@
-"use client";
-
-import Form from "@/app/ui/proposals/create-form";
+"use server";
+import CreateProposalForm from "@/app/ui/proposals/create-form";
 import Breadcrumbs from "@/app/ui/proposals/breadcrumbs";
-import { Account } from "@/app/lib/types";
-import { useState } from "react";
 import ErrorBoundary from "@/app/ui/error-boundary";
 
-export default function Page() {
-  const [account, setAccount] = useState<Account | null>(null);
+export default async function Page() {
   return (
     <main>
       <div className="flex w-full items-center justify-between">
@@ -24,7 +20,7 @@ export default function Page() {
       </div>
       <div className="mt-6">
         <ErrorBoundary>
-          <Form />
+          <CreateProposalForm />
         </ErrorBoundary>
       </div>
     </main>

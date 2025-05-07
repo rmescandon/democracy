@@ -73,20 +73,29 @@ export const createProposal = async ({ title, description }: { title: string; de
   await tx.wait();
 };
 
+const getProposalById = async (contract: ethers.Contract, id: number): Promise<Proposal> => {
+  const [title, description, yesCount, noCount, completed] = await contract.getProposal(id);
+  return {
+    id,
+    title: ethers.decodeBytes32String(title),
+    description: decodeBytes256String(description),
+    yesCount,
+    noCount,
+    completed,
+  };
+};
+
+export const getProposal = async (id: number): Promise<Proposal> => {
+  const contract = await getContract();
+  return await getProposalById(contract, id);
+};
+
 export const getProposals = async (): Promise<Proposal[]> => {
   const contract = await getContract();
   const count = await contract.proposalsCount();
   const proposals: Proposal[] = [];
   for (let i = 0; i < count; i++) {
-    const [title, description, yesCount, noCount, completed] = await contract.getProposal(i);
-    proposals.push({
-      id: i,
-      title: ethers.decodeBytes32String(title),
-      description: decodeBytes256String(description),
-      yesCount,
-      noCount,
-      completed,
-    });
+    proposals.push(await getProposalById(contract, i));
   }
   return proposals;
 };
