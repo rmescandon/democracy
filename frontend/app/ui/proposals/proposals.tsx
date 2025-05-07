@@ -102,8 +102,8 @@ export default function Proposals() {
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">{proposal.description}</td>
-                  <td className="whitespace-nowrap px-3 py-3 text-center">{proposal.yesCount}</td>
-                  <td className="whitespace-nowrap px-3 py-3 text-center">{proposal.noCount}</td>
+                  <td className="whitespace-nowrap px-4 py-3">{proposal.yesCount}</td>
+                  <td className="whitespace-nowrap px-4 py-3">{proposal.noCount}</td>
                   <td className="whitespace-nowrap px-3 py-3">
                     <ProposalStatus done={proposal.completed} />
                   </td>

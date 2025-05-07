@@ -1,8 +1,8 @@
+"use client";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/app/ui/button";
 import Link from "next/link";
 import { registerCitizen } from "@/app/lib/contract";
-import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const handleSubmit = async (formData: FormData) => {

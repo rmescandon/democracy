@@ -1,3 +1,4 @@
+"use client";
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import ErrorAlert from "@/app/ui/error-alert";
 

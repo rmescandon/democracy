@@ -11,13 +11,9 @@ declare global {
   }
 }
 
-export default function MetaMask({
-  account,
-  setAccount,
-}: {
-  account: Account | null;
-  setAccount: Dispatch<React.SetStateAction<Account | null>>;
-}) {
+export default function MetaMask() {
+  const [account, setAccount] = useState<Account | null>(null);
+
   useEffect(() => {
     const checkWalletConnection = async () => {
       if (typeof window.ethereum !== "undefined") {
@@ -71,49 +67,44 @@ export default function MetaMask({
 
   if (account) {
     return (
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <div className="flex items-center">
-          <Image
-            src="/metamask-on.png"
-            alt="metamask"
-            className="mr-4 square-full bg-sky-100 hover:cursor-pointer"
-            width={64}
-            height={64}
-            onClick={disconnectWallet}
-          />
-        </div>
+      <div className="">
         <div className="flex flex-col">
-          <table className="w-full table-auto">
-            <tbody>
-              <tr>
-                <td className="text-sm font-medium text-gray-500">Account:</td>
-                <td className="text-sm text-gray-900">{account.address}</td>
-              </tr>
-              <tr>
-                <td className="text-sm font-medium text-gray-500">Balance:</td>
-                <td className="text-sm text-gray-900">{account.balance} ETH</td>
-              </tr>
-              <tr>
-                <td className="text-sm font-medium text-gray-500">Network:</td>
-                <td className="text-sm text-gray-900">{account.network}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="text-sm font-small text-gray-500 pt-2 pb-2">
+            <Image
+              src="/metamask-on.png"
+              alt="metamask"
+              className="mr-4 square-full bg-sky-100 hover:cursor-pointer"
+              width={50}
+              height={50}
+              onClick={disconnectWallet}
+            />
+          </div>
+          <div className="text-xs text-white">
+            <div className="text-gray-400">Account:</div>
+            <div>{account.address}</div>
+            <div className="text-gray-400">Balance:</div>
+            <div>{account.balance}</div>
+            <div className="text-gray-400">Network:</div>
+            <div>{account.network}</div>
+          </div>
         </div>
       </div>
     );
   }
   return (
-    <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-      <div className="flex items-center">
-        <Image
-          src="/metamask-off.svg"
-          alt="metamask"
-          className="mr-4 square-full bg-red-100 hover:cursor-pointer"
-          width={64}
-          height={64}
-          onClick={connectWallet}
-        />
+    <div className="">
+      <div className="flex flex-col">
+        <div className="text-sm font-small text-gray-500 pt-2 pb-2">
+          <Image
+            src="/metamask-off.svg"
+            alt="metamask"
+            className="mr-4 square-full bg-red-100 hover:cursor-pointer"
+            width={50}
+            height={50}
+            onClick={connectWallet}
+          />
+        </div>
+        <div className="font-small text-white text-xs">Click on the fox icon to connect to Metamask</div>
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 "use client";
 
 import Proposals from "@/app/ui/proposals/proposals";
-import MetaMask from "@/app/ui/metamask";
 // import Search from "@/app/ui/search";
 import { Account } from "@/app/lib/types";
 import { useState } from "react";
@@ -15,9 +14,6 @@ export default function Page() {
     <main>
       <div className="flex w-full items-center justify-between">
         <h1 className="text-2xl">Proposals</h1>
-      </div>
-      <div className="flex w-full items-center justify-between">
-        <MetaMask account={account} setAccount={setAccount} />
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         {/* <Search placeholder="Search proposals..." /> */}

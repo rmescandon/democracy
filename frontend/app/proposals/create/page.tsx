@@ -2,7 +2,6 @@
 
 import Form from "@/app/ui/proposals/create-form";
 import Breadcrumbs from "@/app/ui/proposals/breadcrumbs";
-import MetaMask from "@/app/ui/metamask";
 import { Account } from "@/app/lib/types";
 import { useState } from "react";
 import ErrorBoundary from "@/app/ui/error-boundary";
@@ -22,9 +21,6 @@ export default function Page() {
             },
           ]}
         />
-      </div>
-      <div className="flex w-full items-center justify-between">
-        <MetaMask account={account} setAccount={setAccount} />
       </div>
       <div className="mt-6">
         <ErrorBoundary>

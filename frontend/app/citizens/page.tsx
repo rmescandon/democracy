@@ -1,22 +1,13 @@
-"use client";
-
-import MetaMask from "@/app/ui/metamask";
-import { Account } from "@/app/lib/types";
-import { useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import ErrorBoundary from "@/app/ui/error-boundary";
 import Citizens from "@/app/ui/citizens/citizens";
 
 export default function Page() {
-  const [account, setAccount] = useState<Account | null>(null);
   return (
     <main>
       <div className="flex w-full items-center justify-between">
         <h1 className="text-2xl">Citizens</h1>
-      </div>
-      <div className="flex w-full items-center justify-between">
-        <MetaMask account={account} setAccount={setAccount} />
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         {/* <Search placeholder="Search proposals..." /> */}

@@ -1,10 +1,4 @@
-"use client";
-
-import Proposals from "@/app/ui/proposals/proposals";
-import MetaMask from "@/app/ui/metamask";
 // import Search from "@/app/ui/search";
-import { Account } from "@/app/lib/types";
-import { useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import ErrorBoundary from "@/app/ui/error-boundary";
@@ -12,14 +6,10 @@ import Delegates from "@/app/ui/delegates/delegates";
 import { DelegateUnegisteredAlert } from "@/app/ui/delegates/events";
 
 export default function Page() {
-  const [account, setAccount] = useState<Account | null>(null);
   return (
     <main>
       <div className="flex w-full items-center justify-between">
         <h1 className="text-2xl">Delegates</h1>
-      </div>
-      <div className="flex w-full items-center justify-between">
-        <MetaMask account={account} setAccount={setAccount} />
       </div>
       <div className="mt-6">
         <DelegateUnegisteredAlert />
