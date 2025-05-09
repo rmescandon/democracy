@@ -1,6 +1,6 @@
 import Link from "next/link";
-import NavLinks from "@/app/ui/nav-links";
-import MetaMask from "@/app/ui/metamask";
+import NavLinks from "@/components/nav-links";
+import MetaMask from "@/components/metamask";
 
 export default function SideNav() {
   return (

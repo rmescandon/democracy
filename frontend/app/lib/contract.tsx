@@ -112,6 +112,19 @@ export const finishVoting = async (id: number) => {
   await tx.wait();
 };
 
+export const voteAsCitizen = async (id: number, option: number) => {
+  const contract = await getContract({ withSigner: true });
+  const tx = await contract.voteAsCitizen(id, option);
+  await tx.wait();
+};
+
+export const listenToCitizenVoted = async (callback: (address: string, proposalId: number, option: number) => void) => {
+  const contract = await getContract();
+  contract.on("CitizenVoted", (address: string, proposalId: number, option: number) => {
+    callback(address, proposalId, option);
+  });
+};
+
 // 2.- Citizens
 export const registerCitizen = async (address: string) => {
   const contract = await getContract({ withSigner: true });

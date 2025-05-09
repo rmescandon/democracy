@@ -1,8 +1,8 @@
-import Proposals from "@/app/ui/proposals/proposals";
+import Proposals from "@/components/proposals/proposals";
 // import Search from "@/app/ui/search";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import ErrorBoundary from "@/app/ui/error-boundary";
+import ErrorBoundary from "@/components/error-boundary";
 
 export default async function Page() {
   return (

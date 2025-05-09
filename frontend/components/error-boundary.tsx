@@ -1,6 +1,6 @@
 "use client";
 import React, { Component, ErrorInfo, ReactNode } from "react";
-import ErrorAlert from "@/app/ui/error-alert";
+import ErrorAlert from "@/components/error-alert";
 
 interface ErrorBoundaryProps {
   children?: ReactNode;

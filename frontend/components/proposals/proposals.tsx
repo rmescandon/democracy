@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { getProposals } from "@/app/lib/contract";
 import { Proposal } from "@/app/lib/types";
-import ProposalStatus from "@/app/ui/proposals/status";
-import { ProposalActionButton } from "@/app/ui/proposals/buttons";
+import ProposalStatus from "@/components/proposals/status";
+import { ProposalActionButton } from "@/components/proposals/buttons";
 import { HandThumbDownIcon, HandThumbUpIcon } from "@heroicons/react/24/outline";
 
 export default function Proposals() {

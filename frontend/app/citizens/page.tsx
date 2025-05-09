@@ -1,7 +1,7 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import ErrorBoundary from "@/app/ui/error-boundary";
-import Citizens from "@/app/ui/citizens/citizens";
+import ErrorBoundary from "@/components/error-boundary";
+import Citizens from "@/components/citizens/citizens";
 
 export default async function Page() {
   return (

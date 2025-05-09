@@ -1,9 +1,9 @@
 // import Search from "@/app/ui/search";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import ErrorBoundary from "@/app/ui/error-boundary";
-import Delegates from "@/app/ui/delegates/delegates";
-import { DelegateUnegisteredAlert } from "@/app/ui/delegates/events";
+import ErrorBoundary from "@/components/error-boundary";
+import Delegates from "@/components/delegates/delegates";
+import { DelegateUnegisteredAlert } from "@/components/delegates/events";
 
 export default async function Page() {
   return (

@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import { Account } from "@/app/lib/types";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { connect } from "http2";
 
 declare global {
   interface Window {
@@ -21,11 +22,20 @@ export default function MetaMask() {
           method: "eth_accounts",
         });
         if (accounts.length > 0) {
-          doSetAccount(accounts[0]);
+          doSetAccount(accounts[0].toLowerCase());
         }
       }
     };
     checkWalletConnection();
+
+    if (window.ethereum) {
+      window.ethereum.on("chainChanged", () => {
+        connectWallet();
+      });
+      window.ethereum.on("accountsChanged", () => {
+        connectWallet();
+      });
+    }
   }, [setAccount]);
 
   const doSetAccount = async (address: string) => {

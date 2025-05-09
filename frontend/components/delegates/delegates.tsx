@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getDelegates } from "@/app/lib/contract";
 import { Delegate } from "@/app/lib/types";
-import { UnregisterDelegate } from "@/app/ui/delegates/buttons";
+import { UnregisterDelegate } from "@/components/delegates/buttons";
 import { z } from "zod";
 
 const proposalFormSchema = z.object({

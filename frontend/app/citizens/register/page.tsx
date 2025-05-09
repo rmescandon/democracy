@@ -1,6 +1,6 @@
-import ErrorBoundary from "@/app/ui/error-boundary";
-import RegisterCitizenForm from "@/app/ui/citizens/register-form";
-import CitizenRegisteredAlert from "@/app/ui/citizens/events";
+import ErrorBoundary from "@/components/error-boundary";
+import RegisterCitizenForm from "@/components/citizens/register-form";
+import CitizenRegisteredAlert from "@/components/citizens/events";
 
 export default async function Page() {
   return (

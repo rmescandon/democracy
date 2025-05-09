@@ -1,7 +1,7 @@
 "use server";
-import CreateProposalForm from "@/app/ui/proposals/create-form";
-import Breadcrumbs from "@/app/ui/proposals/breadcrumbs";
-import ErrorBoundary from "@/app/ui/error-boundary";
+import CreateProposalForm from "@/components/proposals/create-form";
+import Breadcrumbs from "@/components/proposals/breadcrumbs";
+import ErrorBoundary from "@/components/error-boundary";
 
 export default async function Page() {
   return (

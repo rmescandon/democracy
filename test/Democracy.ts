@@ -162,6 +162,60 @@ describe("Voting process", () => {
     await expect(democracy.citizenHasVoted(addr1.address, 0)).to.eventually.be.true;
   });
 
+  it("Should allow a citizen to vote with yes", async () => {
+    const { democracy, addr1 } = await loadFixture(deployContract);
+    await democracy.registerCitizen(addr1.address);
+    await democracy.createProposal(
+      ethers.encodeBytes32String("Proposal 1"),
+      encodeBytes256String("Proposal 1 Description"),
+    );
+    let choiceYes = 1;
+    await expect(democracy.connect(addr1).voteAsCitizen(0, choiceYes))
+      .to.emit(democracy, "CitizenVoted")
+      .withArgs(addr1.address, 0, choiceYes);
+    await expect(democracy.citizenHasVoted(addr1.address, 0)).to.eventually.be.true;
+    const [title, description, yesCount, noCount, done] = await democracy.getProposal(0);
+    expect(yesCount).to.equal(1);
+    expect(noCount).to.equal(0);
+    expect(done).to.equal(false);
+  });
+
+  it("Should allow a citizen to vote with no", async () => {
+    const { democracy, addr1 } = await loadFixture(deployContract);
+    await democracy.registerCitizen(addr1.address);
+    await democracy.createProposal(
+      ethers.encodeBytes32String("Proposal 1"),
+      encodeBytes256String("Proposal 1 Description"),
+    );
+    let choiceNo = 2;
+    await expect(democracy.connect(addr1).voteAsCitizen(0, choiceNo))
+      .to.emit(democracy, "CitizenVoted")
+      .withArgs(addr1.address, 0, choiceNo);
+    await expect(democracy.citizenHasVoted(addr1.address, 0)).to.eventually.be.true;
+    const [title, description, yesCount, noCount, done] = await democracy.getProposal(0);
+    expect(yesCount).to.equal(0);
+    expect(noCount).to.equal(1);
+    expect(done).to.equal(false);
+  });
+
+  it("Should allow a citizen to vote with abstain", async () => {
+    const { democracy, addr1 } = await loadFixture(deployContract);
+    await democracy.registerCitizen(addr1.address);
+    await democracy.createProposal(
+      ethers.encodeBytes32String("Proposal 1"),
+      encodeBytes256String("Proposal 1 Description"),
+    );
+    let choiceAbstain = 0;
+    await expect(democracy.connect(addr1).voteAsCitizen(0, choiceAbstain))
+      .to.emit(democracy, "CitizenVoted")
+      .withArgs(addr1.address, 0, choiceAbstain);
+    await expect(democracy.citizenHasVoted(addr1.address, 0)).to.eventually.be.true;
+    const [title, description, yesCount, noCount, done] = await democracy.getProposal(0);
+    expect(yesCount).to.equal(0);
+    expect(noCount).to.equal(0);
+    expect(done).to.equal(false);
+  });
+
   it("Should not allow a citizen to vote twice", async () => {
     const { democracy, addr1 } = await loadFixture(deployContract);
     await democracy.registerCitizen(addr1.address);
